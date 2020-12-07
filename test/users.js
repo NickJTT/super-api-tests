@@ -10,7 +10,7 @@ describe('Users', () => {
   let id = 0;
   describe('POST', () => {
     it('/users', () => {
-      const data = { email: 'testone@gmail.com', name: 'Test One', gender: 'Male', status: 'Active' };
+      const data = { email: `test${ Math.floor(Math.random() * 9999) }@gmail.com`, name: 'Test', gender: 'Male', status: 'Active' };
   
       return request.post('users').set('Authorization', `Bearer ${ TOKEN }`).send(data).then(res => {
         expect(res.body.data).to.deep.include(data);
