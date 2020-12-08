@@ -30,6 +30,25 @@ describe('User Posts', () => {
     });
   });
 
+  describe('Negative Tests', () => {
+    it('Throws 401 Authentication failed', async () => {
+      const data = { user_id: userID, title: 'Title', body: 'Hello, World!' };
+      const res = await request.post('posts').send(data);
+
+      expect(res.body.code).to.eq(401);
+      expect(res.body.data.message).to.eq('Authentication failed');
+    });
+
+    it('Throws 422 Validation failed', async () => {
+      const data = { user_id: userID, title: 'Title' };
+      const res = await request.post('posts').set('Authorization', `Bearer ${TOKEN}`).send(data);
+
+      expect(res.body.code).to.eq(422);
+      expect(res.body.data[0].field).to.eq('body');
+      expect(res.body.data[0].message).to.eq('can\'t be blank');
+    });
+  });
+
   after(async () => {
     await deleteUser(userID);
   });
