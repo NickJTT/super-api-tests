@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 50000"
+    "test": "mocha --timeout 50000",
+    "test-report": "mocha --timeout 50000 --reporter mochawesome"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,7 @@
     "@babel/register": "^7.12.1",
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
+    "mochawesome": "^6.2.1",
     "supertest": "^6.0.1"
   },
   "dependencies": {
