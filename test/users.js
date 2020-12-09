@@ -1,16 +1,15 @@
-import supertest from 'supertest';
 import { expect } from 'chai';
+import faker from 'faker';
+import request from '../config/request';
+require('dotenv').config();
 
-const URL = 'https://gorest.co.in/public-api/';
-const request = supertest(URL);
-
-const TOKEN = '54bc888cacb5831ca31d58d66130397fba876d8ef5f26b4a108996f43e000994';
+const TOKEN = process.env.TOKEN;
 
 describe('Users', () => {
   let id = 0;
   describe('POST', () => {
     it('/users', () => {
-      const data = { email: `test${ Math.floor(Math.random() * 9999) }@gmail.com`, name: 'Test', gender: 'Male', status: 'Active' };
+      const data = { email: faker.internet.email(), name: faker.name.firstName(), gender: 'Male', status: 'Active' };
   
       return request.post('users').set('Authorization', `Bearer ${ TOKEN }`).send(data).then(res => {
         expect(res.body.data).to.deep.include(data);
@@ -21,7 +20,7 @@ describe('Users', () => {
 
   describe('PUT', () => {
     it('/users/:id', () => {
-      const data = { status: 'Inactive', name: 'Test Two' };
+      const data = { status: 'Inactive', name: faker.name.firstName() };
   
       return request.put(`users/${id}`).set('Authorization', `Bearer ${ TOKEN }`).send(data).then(res => {
         expect(res.body.data).to.deep.include(data);

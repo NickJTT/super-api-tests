@@ -1,11 +1,10 @@
-import supertest from 'supertest';
 import { expect } from 'chai';
+import faker from 'faker';
+import request from '../config/request';
 import { createRandomUser, deleteUser } from '../helpers/userHelper';
+require('dotenv').config();
 
-const URL = 'https://gorest.co.in/public-api/';
-const request = supertest(URL);
-
-const TOKEN = '54bc888cacb5831ca31d58d66130397fba876d8ef5f26b4a108996f43e000994';
+const TOKEN = process.env.TOKEN;
 
 describe('User Posts', () => {
   let id = 0;
@@ -17,7 +16,7 @@ describe('User Posts', () => {
 
   describe('POST', () => {
     it('/posts', async () => {
-      const data = { user_id: userID, title: 'Title', body: 'Hello, World!' };
+      const data = { user_id: userID, title: faker.lorem.sentence(), body: faker.lorem.paragraph() };
       const res = await request.post('posts').set('Authorization', `Bearer ${TOKEN}`).send(data);
       expect(res.body.data).to.deep.include(data);
       id = res.body.data.id;
@@ -32,7 +31,7 @@ describe('User Posts', () => {
 
   describe('Negative Tests', () => {
     it('Throws 401 Authentication failed', async () => {
-      const data = { user_id: userID, title: 'Title', body: 'Hello, World!' };
+      const data = { user_id: userID, title: faker.lorem.sentence(), body: faker.lorem.paragraph() };
       const res = await request.post('posts').send(data);
 
       expect(res.body.code).to.eq(401);
@@ -40,7 +39,7 @@ describe('User Posts', () => {
     });
 
     it('Throws 422 Validation failed', async () => {
-      const data = { user_id: userID, title: 'Title' };
+      const data = { user_id: userID, title: faker.lorem.sentence() };
       const res = await request.post('posts').set('Authorization', `Bearer ${TOKEN}`).send(data);
 
       expect(res.body.code).to.eq(422);
